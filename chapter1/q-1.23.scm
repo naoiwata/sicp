@@ -7,10 +7,6 @@
 (define (square n)
 	(* n n))
 
-(add-load-path "." :relative)
-(load "lib.scm")
-(load "q-1.22.scm")
-
 (define (smallest-divisor n)
 	(find-divisor n 2))
 
@@ -26,15 +22,32 @@
 (define (prime? n)
 	(= n (smallest-divisor n)))
 
-; solution
 (define (next a)
 	(if (= a 2)
 		3
 		(+ a 2)))
 
+(define (timed-prime-test n)
+	(newline)
+	(display n)
+	(start-prime-test n (runtime)))
 
-(define (even? n)
-	(= (remainder n 2) 0))
+(define (start-prime-test n start-time)
+	(if (prime? n)
+		(report-prime 
+			(- (runtime) start-time))))
+
+(define (report-prime elapsed-time)
+	(display " *** ")
+	(display elapsed-time))
+
+(define (search-for-primes x y)
+	(cond
+		((even? x)
+					(search-for-primes (+ x 1) y))
+		((< x y)
+				(timed-prime-test x)
+				(search-for-primes (+ x 2) y))))
 
 ; test
 (search-for-primes 1000 1030)
@@ -69,6 +82,18 @@
 ; t4 / t4' = 1124.67 / 360.67 = 3.11
 ; this new program spped is shorter than before one, 
 ; but ratio is not always twise... :( 
+
+; on more large number
+; q-1.22 algorithm
+; (search-for-primes 1000000000000000 1000000000000050)
+; 1000000000000037 *** 25163516
+; q-1.23 algorithm
+; (search-for-primes 1000000000000000 1000000000000050)
+; 25163516 / 13563224 = 1.86
+; 1000000000000037 *** 13563224
+; -> about 2 times inceased:)
 ; then, oncreased the number, this was go well:)
+; -> アルゴリズムの改変により、増加の速度は2倍短縮すると予想され、
+; -> 実験結果は、約2倍処理時間が短縮されているので、仮説は正しいと確認された。
 
 ; END

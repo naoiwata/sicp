@@ -11,7 +11,7 @@
 
 ; Fermat test
 (define (expmod a n m)
-	(con``d
+	(cond
 		((= n 0) 1)
 		((even? n)
 			(remainder

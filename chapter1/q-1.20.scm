@@ -64,4 +64,5 @@
 		(gcd 0 (remainder 2 0
 ; the number of remainder -> 4 counts
 
+; ref : http://naoiwata.blogspot.jp/2013/02/sicp-125-greatest-common-divisors.html
 ; END

@@ -98,9 +98,12 @@
 
 ; on more large number
 (search-for-primes 10000000000000 10000000000038)
-; 10000000000037 *** 1480044
+;   10000000000037 ***  2539849
 (search-for-primes 1000000000000000 1000000000000050)
 ; 1000000000000037 *** 15972611
-; -> about √10 times inceased!!!:)
+; -> about √10 times inceased:)
+; -> このアルゴリズムでは、nに対する増加の速度はΘ(√n)だと推測される。
+; -> 実験結果は、nに対して√n倍ずつ増加しているので仮説が正しいことが確認された。
 
+; ref : http://naoiwata.blogspot.jp/2013/02/sicp-126-testing-for-primality.html
 ; END
