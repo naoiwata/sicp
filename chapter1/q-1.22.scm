@@ -96,4 +96,11 @@
 ; √t4 / √t3 = 1.83
 ; they does not match to √10... :(
 
+; on more large number
+(search-for-primes 10000000000000 10000000000038)
+; 10000000000037 *** 1480044
+(search-for-primes 1000000000000000 1000000000000050)
+; 1000000000000037 *** 15972611
+; -> about √10 times inceased!!!:)
+
 ; END

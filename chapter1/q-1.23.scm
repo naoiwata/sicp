@@ -69,5 +69,6 @@
 ; t4 / t4' = 1124.67 / 360.67 = 3.11
 ; this new program spped is shorter than before one, 
 ; but ratio is not always twise... :( 
+; then, oncreased the number, this was go well:)
 
 ; END
