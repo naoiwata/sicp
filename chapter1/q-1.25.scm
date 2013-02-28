@@ -52,10 +52,10 @@
 (define (search-for-primes x y)
 	(cond
 		((even? x)
-					(search-for-primes (+ x 1) y))
+			(search-for-primes (+ x 1) y))
 		((< x y)
-				(timed-prime-test x)
-				(search-for-primes (+ x 2) y))))
+			(timed-prime-test x)
+			(search-for-primes (+ x 2) y))))
 
 ; test
 ; in pre question high speed procedure
