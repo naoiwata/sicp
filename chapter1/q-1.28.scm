@@ -9,25 +9,26 @@
 	(* n n))
 
 (define (expmod-mr a n m)
-	(cond
-		((= n 0)
+	(cond 
+		((= n 0) 
 			1)
 		((even? n)
-			(mr-test
-				(expmod-mr a (/ n 2) m)
-				m))
+			(let* ((x (expmod-mr a (/ n 2) m))
+				(result (remainder (square n) m)))
+					(if (mr? a n)
+					result)))
 		(else
-			(remainder
+			(remainder 
 				(* a (expmod-mr a (- n 1) m))
 				m))))
 
-(define (mr-test p n)
-	(cond
-		((remainder (square p) n) p)
-		((= p 1) p)
-		((= p (- n 1)) p)
-		(else
-			0)))
+; added ------ ちゃんと評価しない。後で考える。
+(define (mr? p n)
+	(and 
+		(not (= p 1))
+		(not (= p (- n 1)))
+		(= (remainder (square p) n) 1)))
+; added end
 
 (define (fermat-test n)
 	(define (try-it a)
@@ -55,4 +56,5 @@
 (fast-prime? 2821 2)
 ; -> #f
 
+(fast-prime? 200 2)
 ; END
