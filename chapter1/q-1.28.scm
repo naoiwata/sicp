@@ -1,4 +1,4 @@
-;;
+ ;;
 ;; @author naoiwata
 ;; SICP Chapter1
 ;; q-1.28
@@ -13,22 +13,27 @@
 		((= n 0) 
 			1)
 		((even? n)
-			(let* ((x (expmod-mr a (/ n 2) m))
-				(result (remainder (square n) m)))
-					(if (mr? a n)
-					result)))
+			(test a n m))
 		(else
 			(remainder 
 				(* a (expmod-mr a (- n 1) m))
 				m))))
 
-; added ------ ちゃんと評価しない。後で考える。
+(define (test a n m)
+	(if (mr? (expmod-mr a (/ n 2) m) m)
+		(remainder
+			(square (expmod-mr a (/ n 2) m))
+			m)
+		0))
+
 (define (mr? p n)
-	(and 
-		(not (= p 1))
-		(not (= p (- n 1)))
-		(= (remainder (square p) n) 1)))
-; added end
+	(if
+		(and
+			(not (= p 1))
+			(not (= p (- n 1)))
+			(= (remainder (square p) n) 1))
+		#f
+		#t))
 
 (define (fermat-test n)
 	(define (try-it a)
@@ -55,6 +60,7 @@
 ; -> #f
 (fast-prime? 2821 2)
 ; -> #f
+(fast-prime? 29 2)
+; -> #t
 
-(fast-prime? 200 2)
 ; END
