@@ -16,6 +16,12 @@
 			(- count 1))))
 
 ;; lib 
+(define (inc n)
+	(+ n 1))
+
+(define (dec n)
+	(- n 1))
+
 (define (square n)
 	(* n n))
 
