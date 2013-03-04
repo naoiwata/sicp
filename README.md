@@ -1,8 +1,6 @@
 sicp
 ====
 
-Structure and Interpretation
-of Computer Programs
-second edition
+## Structure and Interpretation of Computer Programs
 
-![Alt text](img.png)
+![Alt text](img.jpg)
