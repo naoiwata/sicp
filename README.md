@@ -1,4 +1,8 @@
 sicp
 ====
 
-my studying logs of sicp solution
+Structure and Interpretation
+of Computer Programs
+second edition
+
+![Alt text](img.png)
