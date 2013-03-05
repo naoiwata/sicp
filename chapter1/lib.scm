@@ -25,6 +25,26 @@
 (define (square n)
 	(* n n))
 
+(define (average x y)
+	(/
+		(+ x y)
+		2))
+
+(define (abs n)
+	(if (< n 0)
+		(- 0 n)
+		n))
+
+(define (positive? n)
+	(if (< 0 n)
+		#t
+		#f))
+
+(define (negative? n)
+	(if (< n 0)
+		#t
+		#f))
+
 ;; runtime
 ;; thanks to http://sicp.g.hatena.ne.jp/n-oohira/20090122/1232632508
 ;; return micro-sec
