@@ -15,6 +15,7 @@
 ; test
 (print
 	((repeated square 2) 5))
+; ((5^2)^2) -> 5^4
 ; 625
 
 ; END
