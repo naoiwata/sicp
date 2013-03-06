@@ -22,7 +22,7 @@
 
 ; test
 (fixed-point cos 1.0)
-(display "***")
+
 ; x |-> log(1000)/log(x)
 ; general method
 (print
@@ -65,9 +65,12 @@
 ; 0.555544090254035
 ; 0.555530175417048
 ; 0.555539351985717
-; -> 35 times
+; -> 36 times
 
 ; average damping method
+; x^x = 1000
+; x = log(1000)/log(x)
+; f(x) = log(1000)/log(x) = x
 (print
 	(fixed-point 
 		(lambda (x) (average x (/ (log 1000) (log x))))
