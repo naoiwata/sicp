@@ -24,15 +24,14 @@
 		(else
 			#f)))
 
-(print
-	(test
-		(lambda (k)
-			(cont-franc
-				(lambda (i) 1.0)
-				(lambda (i) 1.0)
-			k))
-		1
-		20))
+(test
+	(lambda (k)
+		(cont-franc
+			(lambda (i) 1.0)
+			(lambda (i) 1.0)
+		k))
+	1
+	20)
 ; 19 : 0.6180339985218034
 ; 18 : 0.6180339631667064
 ; 17 : 0.6180340557275542
