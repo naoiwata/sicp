@@ -53,7 +53,7 @@
 ; i : required average damps times 
 ; n | 1 | 2 | 3 | 4 | 5 |  6  | ... | 8 | ... | 16 |
 ; i | / | 1 | 1 | 2 | 2 | 2~3 | ... | 3 | ... |  4 | 
-; i(n) = log(n)
+; i(n) = log(n)/log(2)
 
 ; so, this is written such an expression,
 (define (n-sqrt-new x n)
