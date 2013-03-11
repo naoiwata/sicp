@@ -12,7 +12,7 @@
 (define (rectangle p q)
 	(cons p q))
 
-; abstruct these procedure
+; abstruct this procedure
 (define (abst-2points f r)
 	(let
 		((p (start-segment r))
@@ -44,7 +44,8 @@
 						(-
 							(x-point p)
 							(x-point q)))
-					(abs (-
+					(abs 
+						(-
 							(y-point p)
 							(y-point q))))))
 		r))
@@ -62,7 +63,8 @@
 					(-
 						(x-point p)
 						(x-point q)))
-				(abs (-
+				(abs 
+					(-
 						(y-point p)
 						(y-point q)))))
 		r))
