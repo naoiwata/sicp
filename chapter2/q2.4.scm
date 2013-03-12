@@ -18,17 +18,9 @@
 ; -> (car (cons x y))
 ; -> (car (lambda (m) (m x y)))
 ; -> ((lambda (m) (m x y)) (lambda (p q) p)))
-; -> [*]thought
 ; -> ((lambda (p q) p) x y)
+; -> (lambda (x y) x)
 ; -> x
-
-; [*]
-; ((lambda (m) (m x y)) (lambda (p q) p)))
-; -> ((g (m) (m x y)) (f (p q) p)))
-; -> g(f(p, q)) = (f(p, q)) x y)
-; -> g(f(p, q)) = (f(x, y))
-; f(x, y) = x
-; -> g(f(p, q)) = x
 
 (define (cdr z)
 	(z
