@@ -28,10 +28,10 @@
 ; n %
 ; w = (a + w) * n/100
 ; -> n = (100 * w)/(a + w)
-; -> n = (200 * width)/center
+; -> n = (100 * width)/center
 (define (percent i)
 	(/
-		(* 200 (width i))
+		(* 100 (width i))
 		(center i)))
 
 ; (center - center*n/100) ~ (center + center*n/100)
