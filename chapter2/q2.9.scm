@@ -31,27 +31,17 @@
 (print (width-interval (sub-interval R1 R2))) ; 0.5
 
 ;; mul
-(define (mul-interval x y)
-	(make-interval 
-		(* (lower-bound x) (lower-bound y))
-		(* (upper-bound x) (upper-bound y))))
-
-(print (mul-interval R1 R2)) ; (9.0 . 30.0)
-(print (width-interval (mul-interval R1 R2))) ; 10.5
-(print (mul-interval R1 R3)) ; (13.0 . 48.0)
-(print (width-interval (mul-interval R1 R3))) ; 17.5
+(print (mul-interval R1 R2)) ; (9.0 . 27.0)
+(print (width-interval (mul-interval R1 R2))) ; 9.0
+(print (mul-interval R1 R3)) ; (13.0 . 39.0)
+(print (width-interval (mul-interval R1 R3))) ; 13.0
 ; -> these result are not equal..
 
 ;; div
-(define (div-interval x y)
-	(make-interval 
-		(/ (lower-bound x) (lower-bound y))
-		(/ (upper-bound x) (upper-bound y))))
-
-(print (div-interval R1 R2)) ; (0.1111111111111111 . 0.3)
-(print (width-interval (div-interval R1 R2))) ; 0.09444444444444444
-(print (mul-interval R1 R3)) ; (13.0 . 48.0)
-(print (width-interval (div-interval R1 R3))) ; 0.055288461538461536
+(print (div-interval R1 R2)) ; (0.1 . 0.30000000000000004)
+(print (width-interval (div-interval R1 R2))) ; 0.10000000000000002
+(print (div-interval R1 R3)) ; (0.0625 . 0.1875)
+(print (width-interval (div-interval R1 R3))) ; 0.0625
 ; -> these result are not equal..
 
 ; END
