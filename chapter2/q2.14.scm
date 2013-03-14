@@ -19,7 +19,7 @@
 			(div-interval one r1)
 			(div-interval one r2)))))
 
-; solusion
+; solution
 (define x (make-center-percent 1.0 3.0))
 (define y (make-center-percent 7.0 8.0))
 (define a (par1 x y))
