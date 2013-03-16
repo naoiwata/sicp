@@ -32,6 +32,8 @@
 
 ; question
 ; be abstruct this map procedure
+(add-load-path "." :relative)
+(load "pages/lib.scm")
 (define (abstruct-tree tree g)
 	(map
 		(lambda (sub-tree)
@@ -44,13 +46,13 @@
 (print 
 	(abstruct-tree 
 		(list 1 (list 2 (list 3 4) 5) (list 6 7))
-		(lambda (x) (* 10 x))))
+		(lambda (x) (square x))))
 ; (10 (20 (30 40) 50) (60 70))
 
 (define (square-tree tree)
 	(abstruct-tree
 		tree
-		(lambda (x) (* x x))))
+		(lambda (x) (square x))))
 ; test
 (print
 	(square-tree (list 1 (list 2 (list 3 4) 5) (list 6 7))))

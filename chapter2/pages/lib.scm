@@ -16,4 +16,8 @@
 		(+ a b)
 		2))
 
+; square
+(define (square x)
+	(* x x))
+
 ; END
