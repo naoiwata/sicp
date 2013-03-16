@@ -56,4 +56,33 @@
 	(square-tree (list 1 (list 2 (list 3 4) 5) (list 6 7))))
 ; (1 (4 (9 16) 25) (36 49))
 
+; ADDED
+; Define square-tree both directly (i.e., without using any higher-order procedures) and also by using map and recursion.
+(define (square-tree-direct tree)
+	(cond
+		((null? tree)
+			())
+		((not (pair? tree))
+			(* tree tree))
+		(else
+			(cons
+				(square-tree-direct (car tree))
+				(square-tree-direct (cdr tree))))))
+; test
+(print
+	(square-tree-direct (list 1 (list 2 (list 3 4) 5) (list 6 7))))
+; (1 (4 (9 16) 25) (36 49))
+
+(define (square-tree-usingmap tree)
+	(map
+		(lambda (sub-tree)
+			(if (pair? sub-tree)
+				(square-tree-usingmap sub-tree)
+				(* sub-tree sub-tree)))
+		tree))
+; test
+(print
+	(square-tree-usingmap (list 1 (list 2 (list 3 4) 5) (list 6 7))))
+; (1 (4 (9 16) 25) (36 49))
+
 ; END
