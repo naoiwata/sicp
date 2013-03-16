@@ -5,7 +5,7 @@
 (add-load-path "." :relative)
 (load "pages/lib.scm")
 (load "pages/2.2.3.scm")
-(print "***")
+
 (define (map p sequence)
 	(accumulate 
 		(lambda (x y)
