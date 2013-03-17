@@ -34,7 +34,8 @@
 ; test
 (print (even-fibs 10)) ; (2 8 34)
 
-; Sequence Operations
+
+;; Sequence Operations ;;
 (print (map square (list 1 2 3 4 5)))
 ; (1 4 9 16 25)
 
@@ -132,5 +133,66 @@
 		0
 		(map salary
 		(filter programmer? records))))
+
+
+;; Nested Mappings ;;
+#|
+ i | 2 3 4 4 5 6 6 
+ j | 1 2 1 3 2 1 5
+i+j| 3 5 5 7 7 7 11
+|#
+
+(lambda (n)
+	(accumulate
+		append
+		()
+		(map
+			(lambda (i)
+				(map 
+					(lambda (j) 
+						(list i j))
+				(enumerate-interval 1 (- i 1))))
+		(enumerate-interval 1 n))))
+
+(define (flatmap proc seq)
+	(accumulate append () (map proc seq)))
+
+(define (prime-sum? pair)
+	(prime? (+ (car pair) (cadr pair))))
+
+(define (make-pair-sum pair)
+	(list (car pair) (cadr pair) (+ (car pair) (cadr pair))))
+
+(define (prime-sum-pairs n)
+	(map 
+		make-pair-sum
+		(filter prime-sum?
+			(flatmap
+				(lambda (i)
+					(map 
+						(lambda (j) 
+							(list i j))
+					(enumerate-interval 1 (- i 1))))
+				(enumerate-interval 1 n)))))
+; test
+(print (prime-sum-pairs 6))
+; ((2 1 3) (3 2 5) (4 1 5) (4 3 7) (5 2 7) (6 1 7) (6 5 11))
+
+(define (permutations s)
+	(if (null? s) ; empty set?
+		(list ()) ; sequence containing empty set
+		(flatmap 
+			(lambda (x)
+				(map 
+					(lambda (p) 
+						(cons x p))
+				(permutations (remove x s))))
+			s)))
+
+(define (remove item sequence)
+	(filter 
+		(lambda (x) 
+			(not (= x item)))
+		sequence))
 
 ; END

@@ -26,4 +26,17 @@
 		1 
 		(+ (fib (- n 1)) (fib (- n 2)))))
 
+; prime
+(define (prime? n)
+	(define (find-divisor n a)
+		(cond
+			((< n (square a)) n)
+			((= (remainder n a) 0) a)
+			(else (find-divisor n (+ a 1)))))
+	(= 
+		n 
+		((lambda (n)
+			(find-divisor n 2))
+		n)))
+
 ; END
