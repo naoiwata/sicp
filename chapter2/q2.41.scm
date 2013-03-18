@@ -4,7 +4,6 @@
 
 (add-load-path "." :relative)
 (load "pages/2.2.3.scm")
-(load "q2.36.scm")
 
 (define (unique-trios n)
 	(flatmap
