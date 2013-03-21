@@ -34,9 +34,8 @@
 				((this-row (car positions)))
 				(if 
 					(or 
-						(= this-row new-row) ; 同じ列
-						(= (+ this-row n) new-row) ; 斜め 
-						(= (- this-row n) new-row)) ; 斜め
+						(= this-row new-row)
+						(= (abs (- this-row new-row)) n))
 					#f
 					(next new-row (cdr positions) (+ 1 n))))))
 	(next (car positions) (cdr positions) 1))
