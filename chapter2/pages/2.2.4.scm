@@ -20,10 +20,10 @@
 ; recursive
 (define (right-split painter n)
 	(if (= n 0)
-	painter
-	(let 
-		((smaller (right-split painter (- n 1))))
-		(beside painter (below smaller smaller)))))
+		painter
+		(let 
+			((smaller (right-split painter (- n 1))))
+			(beside painter (below smaller smaller)))))
 
 (define (corner-split painter n)
 	(if (= n 0)
@@ -154,5 +154,9 @@ rotate180 flip-vert)))
 			(lambda (frame)
 				(paint-left frame)
 				(paint-right frame)))))
+
+;; Levels of language for robust design ;;
+
+
 
 ; END
