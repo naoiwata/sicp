@@ -157,6 +157,4 @@ rotate180 flip-vert)))
 
 ;; Levels of language for robust design ;;
 
-
-
 ; END
