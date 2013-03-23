@@ -16,11 +16,9 @@ x^3 -> '(** x 3)
 		(eq? (car x) '**)
 		(pair? (cdr x))))
 
-(define (base x)
-	(car (cdr x)))
+(define (base x) (addend x))
 
-(define (exponent x)
-	(car (cdr (cdr x))))
+(define (exponent x) (augend x))
 
 ; d(x^a)/dx = a*x^(a-1)
 (define (make-exponentiation x a)
