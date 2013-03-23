@@ -5,8 +5,24 @@
 (add-load-path "." :relative)
 (load "q2.56.scm")
 
-(newline)
-;(print (deriv '(* x y (+ x 3)) 'x))
+; before
+(print (deriv '(* x y (+ x 3)) 'x))
 
-; redfine make-sum and make-product
+; redfine augend and multiplicand
+(define (augend s)
+	(let
+		((first (car s))
+		(second (cdr s))
+		(third (cddr s)))
+		(if (null? (cdddr s))
+			(caddr s)
+			(cons '+ third))))
 
+(define (multiplicand s)
+	(if (null? (cdddr s)) 
+		(caddr s)
+		(cons '* (cddr s))))
+; after
+(print (deriv '(* x y (+ x 3)) 'x))
+
+; END
