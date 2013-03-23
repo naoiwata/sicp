@@ -58,7 +58,6 @@ x^3 -> '(** x 3)
 		(else
 			(error "unknown expression type -- DERIV" exp))))
 ; test
-(print "hoge")
 (print (deriv '(** x 0) 'x)) ; 0
 (print (deriv '(** x 1) 'x)) ; 1
 (print (deriv '(** x 2) 'x)) ; (+ 2 x)
