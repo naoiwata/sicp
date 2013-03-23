@@ -10,13 +10,9 @@
 
 ; redfine augend and multiplicand
 (define (augend s)
-	(let
-		((first (car s))
-		(second (cdr s))
-		(third (cddr s)))
-		(if (null? (cdddr s))
-			(caddr s)
-			(cons '+ third))))
+	(if (null? (cdddr s))
+		(caddr s)
+		(cons '+ (cddr s))))
 
 (define (multiplicand s)
 	(if (null? (cdddr s)) 
