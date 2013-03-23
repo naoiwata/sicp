@@ -1,9 +1,10 @@
 sicp
 ====
 
-## Structure and Interpretation of Computer Programs
+### Structure and Interpretation of Computer Programs
 
-solved codes are this repository. 
-and solved expression and figures are [on this blog](http://naoiwata.blogspot.jp/search/label/sicp)
+solved codes are on this repository.   
+solved expressions and figures are shown on [Blogger](http://naoiwata.blogspot.jp/search/label/sicp)   
+blog articles are shown on [Hatena Blog](http://na0iwata.hatenadiary.com/archive/category/sicp)   
 
 ![Alt text](img.jpg)
