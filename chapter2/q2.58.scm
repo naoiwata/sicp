@@ -49,6 +49,7 @@
 
 ; (b)
 
+; (cadr (list 1 2 3 4)) -> 2
 ; (cddr (list 1 2 3 4)) -> (3 4)
 ; (cdddr (list 1 2 3 4)) -> (4)
 
