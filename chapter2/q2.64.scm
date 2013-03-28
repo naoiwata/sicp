@@ -28,7 +28,7 @@
                 (cons (make-tree this-entry left-tree right-tree) remaining-elts))))))))
 
 ;; (a)
-(print (list->tree (list 1 3 5 7 9 11)))
+
 ; (5 (1 () (3 () ())) (9 (7 () ()) (11 () ())))
 #|
   5
@@ -40,7 +40,7 @@
   3   +---+
       |   |
       7   11
-
+(list->tree (list 1 3 5 7 9 11 13))
 ; see detail of this procedure :)
 
 ;; n=0: (partial-tree '(1 3 5 7 9 11) 0)
@@ -163,5 +163,11 @@
 ;; (b)
 the number of steps: Θ(n)
 |#
+
+; test
+(print (list->tree (list 1 3 5 7 9 11)))
+; (7 (3 (1 () ()) (5 () ())) (11 (9 () ()) (13 () ())))
+(print (list->tree (list 1 3 5 7 9 11 13 15)))
+; (7 (3 (1 () ()) (5 () ())) (11 (9 () ()) (13 () (15 () ()))))
 
 ; END
