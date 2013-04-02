@@ -16,9 +16,9 @@ x^3 -> '(** x 3)
 		(eq? (car x) '**)
 		(pair? (cdr x))))
 
-(define (base x) (addend x))
+(define (base x) (cadr x))
 
-(define (exponent x) (augend x))
+(define (exponent x) (caddr x))
 
 ; d(x^a)/dx = a*x^(a-1)
 (define (make-exponentiation x a)
@@ -60,6 +60,6 @@ x^3 -> '(** x 3)
 (print (deriv '(** x 1) 'x)) ; 1
 (print (deriv '(** x 2) 'x)) ; (+ 2 x)
 (print (deriv '(** x 6) 'x)) ; (* 6 (** x 5))
-(print (deriv '(+ (** x 3) (* 4 (** x 2))) 'x)) ; (* 6 (** x 5))
+(print (deriv '(+ (** x 3) (* 4 (** x 2))) 'x)) ; (+ (* 3 (** x 2)) (* 4 (* 2 x)))
 
 ; END

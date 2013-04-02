@@ -80,7 +80,7 @@
   'done)
 
 ;; product
-(define (install-addtion-package)
+(define (install-product-package)
   ;; internal procedures
   ; selector
   (define (multiplier s)
@@ -109,5 +109,45 @@
   'done)
 
 ; (c)
+;; exponent
+(define (install-exponent-package)
+  ;; internal procedures
+  ; selector
+  (define (base s)
+    (cadr s))
+  (define (exponent s)
+    (caddr s))
+  ; element
+  (define (make-exponent x a)
+    (cond
+      ((=number? a 0) 1)
+      ((=number? a 1) x)
+      (else
+        (list '** x a))))
+  (define (exponent-deriv exp var)
+    (let
+      ((make-sum (get 'make-sum '+))
+       (make-product (get 'make-product '*)))
+      (make-product
+        (exponent exp)
+        (make-product
+          (make-exponent (base exp) (make-sum (exponent exp) -1))
+          (deriv (base exp) var))))
+  ;; interface
+  (put 'make-exponent '* make-exponent)
+  (put 'deriv '* exponent-deriv)
+  'done)
   
 ; (d)
+#|
+(get <op> <type>)
+(put <op> <type> <item>)
+
+getの第一引数と第二引数を入れ替えた場合同様にputの第一引数と第二引数のみを変更すれば良い
+(get <type> <op>)
+(put <type> <op> <item>)
+|#
+
+; ※getとputが実装できなくてテストできていない
+
+; END
