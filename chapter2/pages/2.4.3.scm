@@ -66,6 +66,9 @@
             "No method for these types -- APPLY-GENERIC"
             (list op type-tags))))))
 
+; what is apply:(
+(print (apply + '(1 2 3 4))) ; 10
+
 ; use this
 (define (real-part z) 
   (apply-generic 'real-part z))
