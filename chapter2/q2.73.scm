@@ -27,7 +27,7 @@
     ((variable? exp) 
      (if (same-variable? exp var) 1 0))
     (else
-      ((get 'deriv (operator exp)) (operands exp) var))))
+      ((get 'deriv-table (operator exp)) (operands exp) var))))
 
 (define (operator exp) 
   (car exp))
@@ -44,19 +44,35 @@
 これらは型タグを持たないなので、データ型タグによる式判別ができない為。
 |#
 
-; (b)
+; (b), (c)
 ;; lib
 (define (variable? x)
   (symbol? x))
 
-;; sum
-(define (install-addtion-package)
-  ;; internal procedures
+(define (same-variable? v1 v2)
+  (and (variable? v1) (variable? v2) (eq? v1 v2)))
+
+(define (=number? exp num)
+  (and (number? exp) (= exp num)))
+
+; hash table
+(define deriv-table (make-hash-table))
+
+(define (put op type item)
+  (hash-table-put! deriv-table type item))
+
+(define (get op type)
+  (hash-table-get deriv-table type))
+
+; deriv
+(define (install-deriv-package)
+  ;;; internal procedures
+  ;; sum
   ; selector
   (define (addend s)
-    (operator s))
+    (car s))
   (define (augend s)
-    (operands s))
+    (cadr s))
   ; element
   (define (make-sum a1 a2)
     (cond
@@ -71,19 +87,12 @@
   (define (sum-deriv exp var)
     (make-sum (deriv (addend exp) var)
               (deriv (augend exp) var)))
-  ;; interface
-  (put 'make-sum '+ make-sum)
-  (put 'deriv '+ deriv-sum)
-  'done)
-
-;; product
-(define (install-product-package)
-  ;; internal procedures
+  ;; product
   ; selector
   (define (multiplier s)
-    (operator s))
+    (car s))
   (define (multiplicand s)
-    (operands s))
+    (cadr s))
   ; element
   (define (make-product m1 m2)
     (cond 
@@ -93,27 +102,19 @@
       ((and (number? m1) (number? m2)) (* m1 m2))
       (else (list '* m1 m2))))
   (define (product-deriv exp var)
-    ((get 'make-sum '+)
+    (make-sum
      (make-product
        (multiplier exp)
        (deriv (multiplicand exp) var))
      (make-product 
        (deriv (multiplier exp) var)
        (multiplicand exp))))
-  ;; interface
-  (put 'make-product '* make-product)
-  (put 'deriv '* product-deriv)
-  'done)
-
-; (c)
-;; exponent
-(define (install-exponent-package)
-  ;; internal procedures
+  ;; exponent
   ; selector
   (define (base s)
-    (operator s))
+    (car s))
   (define (exponent s)
-    (operands s))
+    (cadr s))
   ; element
   (define (make-exponent x a)
     (cond
@@ -122,19 +123,23 @@
       (else
         (list '** x a))))
   (define (exponent-deriv exp var)
-    (let
-      ((make-sum (get 'make-sum '+))
-       (make-product (get 'make-product '*)))
+    (make-product
+      (exponent exp)
       (make-product
-        (exponent exp)
-        (make-product
-          (make-exponent (base exp) (make-sum (exponent exp) -1))
-          (deriv (base exp) var))))
-  ;; interface
-  (put 'make-exponent '** make-exponent)
-  (put 'deriv '** exponent-deriv)
+        (make-exponent (base exp) (make-sum (exponent exp) -1))
+        (deriv (base exp) var))))
+  ;;; interface
+  (put 'sum-deriv '+ sum-deriv)
+  (put 'product-deriv '* product-deriv)
+  (put 'exponent-deriv '** exponent-deriv)
   'done)
-  
+
+; test
+(install-deriv-package)
+(print (deriv '(+ x 3) 'x)) ; 1
+(print (deriv '(* x y) 'x)) ; y
+(print (deriv '(* (* x y) (+ x 3)) 'x)) ; (+ (* x y) (* y (+ x 3)))
+
 ; (d)
 #|
 (get <op> <type>)
@@ -144,7 +149,5 @@ getの第一引数と第二引数を入れ替えた場合同様にputの第一�
 (get <type> <op>)
 (put <type> <op> <item>)
 |#
-
-; ※getとputが実装できなくてテストできていない
 
 ; END
