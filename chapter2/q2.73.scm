@@ -2,9 +2,6 @@
 ;; SICP Chapter2
 ;; question 2.73
 
-;(add-load-path "." :relative)
-;(load "pages/2.3.2.scm")
-
 (define (deriv exp var)
   (cond 
     ((number? exp) 0)
@@ -57,9 +54,9 @@
   ;; internal procedures
   ; selector
   (define (addend s)
-    (cadr s))
+    (operator s))
   (define (augend s)
-    (caddr s))
+    (operands s))
   ; element
   (define (make-sum a1 a2)
     (cond
@@ -84,9 +81,9 @@
   ;; internal procedures
   ; selector
   (define (multiplier s)
-    (cadr s))
+    (operator s))
   (define (multiplicand s)
-    (caddr s))
+    (operands s))
   ; element
   (define (make-product m1 m2)
     (cond 
@@ -114,9 +111,9 @@
   ;; internal procedures
   ; selector
   (define (base s)
-    (cadr s))
+    (operator s))
   (define (exponent s)
-    (caddr s))
+    (operands s))
   ; element
   (define (make-exponent x a)
     (cond
@@ -134,8 +131,8 @@
           (make-exponent (base exp) (make-sum (exponent exp) -1))
           (deriv (base exp) var))))
   ;; interface
-  (put 'make-exponent '* make-exponent)
-  (put 'deriv '* exponent-deriv)
+  (put 'make-exponent '** make-exponent)
+  (put 'deriv '** exponent-deriv)
   'done)
   
 ; (d)
