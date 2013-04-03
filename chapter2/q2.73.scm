@@ -138,6 +138,7 @@
 (install-deriv-package)
 (print (deriv '(+ x 3) 'x)) ; 1
 (print (deriv '(* x y) 'x)) ; y
+(print (deriv '(** x 4) 'x)) ; (* 4 (** x 3))
 (print (deriv '(* (* x y) (+ x 3)) 'x)) ; (+ (* x y) (* y (+ x 3)))
 
 ; (d)
