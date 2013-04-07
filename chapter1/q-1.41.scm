@@ -8,14 +8,10 @@
 (load "lib.scm")
 
 (define (double f)
-	(lambda (x)
-		(f (f x))))
+  (lambda (x)
+    (f (f x))))
 
-(print (((double) inc) 1))
-; 3
-
-(((double (double double)) inc) 5)
-
+(print (((double (double double)) inc) 5))
 ; ((double f) x)                   -> f(f(x)) = g(x)
 ; (((double double) f) x)          -> f(f(g(x))) = h(x)
 ; (((double (double double)) f) x) -> f(f(h(x) + h(x)))
@@ -25,5 +21,10 @@
 ; -> inc(10 + 10)
 ; -> inc(20)
 ; -> 21
+
+#|
+(double inc)
+-> (inc (inc x))
+|#
 
 ; END

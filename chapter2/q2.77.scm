@@ -23,7 +23,7 @@
     (let 
       ((proc (get op type-tags)))
       (if proc
-          (apply proc (map contents args))
+          (apply proc (map  args))
           (error
             "No method for these types -- APPLY-GENERIC"
             (list op type-tags))))))
@@ -77,7 +77,6 @@
 
 (define (make-scheme-number n)
   ((get 'make 'scheme-number) n))
-
 
 ; rational procedure ----------------------------------------------
 
@@ -240,8 +239,22 @@
 (define (div x y) (apply-generic 'div x y))
 
 (define z (make-complex-from-real-imag 3 4))
-(print z) 
+(print magnitude) 
 ; (complex rectangular 3 . 4)
 
-; (magnitude z) 
+(magnitude z) 
 ; -> *** ERROR: No method for these types -- APPLY-GENERIC (magnitude (complex))
+
+#|
+;; ------- add from -------
+  (define (real-part z)
+    (apply-generic 'real-part z))
+  (define (imag-part z)
+    (apply-generic 'imag-part z))
+  (define (magnitude z)
+    (apply-generic 'magnitude z))
+  (define (angle z)
+    (apply-generic 'angle z))
+  ;; ------- add end -------
+  \
+|#
