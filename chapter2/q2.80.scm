@@ -1,6 +1,6 @@
 ;; @author naoiwata
 ;; SICP Chapter2
-;; question 2.79
+;; question 2.80
 
 (add-load-path "." :relative)
 (load "q2.77.scm")
@@ -18,9 +18,11 @@
        (lambda (x y) (tag (* x y))))
   (put 'div '(scheme-number scheme-number)
        (lambda (x y) (tag (/ x y))))
-  ;; ------- add from -------
   (put 'equ? '(scheme-number scheme-number)
        (lambda (x y) (= x y)))
+  ;; ------- add from -------
+  (put '=zero? '(scheme-number)
+       (lambda (x) (zero? x)))
   ;; ------- add end --------
   (put 'make 'scheme-number
        (lambda (x) (tag x)))
@@ -52,10 +54,12 @@
   (define (div-rat x y)
     (make-rat (* (numer x) (denom y))
               (* (denom x) (numer y))))
-  ;; ------- add from -------
   (define (equ? x y)
-       (= (* (numer x) (denom y))
+       (= (* (numer x) (denon y))
           (* (denom x) (numer y))))
+  ;; ------- add from -------
+  (define (=zero? x)
+    (zero? (numer x)))
   ;; ------- add end --------
   ;; interface to rest of the system
   (define (tag x) (attach-tag 'rational x))
@@ -67,9 +71,11 @@
        (lambda (x y) (tag (mul-rat x y))))
   (put 'div '(rational rational)
        (lambda (x y) (tag (div-rat x y))))
-  ;; ------- add from -------
   (put 'equ? '(rational rational)
        (lambda (x y) (equ? x y)))
+  ;; ------- add from -------
+  (put '=zero? '(rational)
+       (lambda (x) (zero? x)))
   ;; ------- add end --------
   (put 'make 'rational
        (lambda (n d) (tag (make-rat n d))))
@@ -165,10 +171,13 @@
     (apply-generic 'magnitude z))
   (define (angle z)
     (apply-generic 'angle z))
-  ;; ------- add from -------
   (define (equ? x y)
     (and (= (real-part x) (real-part y))
          (= (imag-part x) (imag-part y))))
+  ;; ------- add from -------
+  (define (=zero? x)
+    (and (zero? (real-part x)) 
+         (zero? (imag-part x))))
   ;; ------- add end --------
   ;; interface to rest of the system
   (define (tag z) (attach-tag 'complex z))
@@ -188,9 +197,11 @@
   (put 'imag-part '(complex) imag-part)
   (put 'magnitude '(complex) magnitude)
   (put 'angle '(complex) angle)
-  ;; ------- add from -------
   (put 'equ? '(complex complex)
        (lambda (z1 z2) (eq? z1 z2)))
+  ;; ------- add from -------
+  (put '=zero? '(complex)
+       (lambda (z1) (=zero? z1)))
   ;; ------- add end --------
   'done)
 
@@ -212,16 +223,16 @@
 (define (sub x y) (apply-generic 'sub x y))
 (define (mul x y) (apply-generic 'mul x y))
 (define (div x y) (apply-generic 'div x y))
-;; ------- add from -------
 (define (equ? x y) (apply-generic 'equ? x y))  
+;; ------- add from -------
+(define (=zero? x) (apply-generic '=zero? x))  
 ;; ------- add end --------
 
 ; test
-(define p1 (make-scheme-number 0))
-(define p2 (make-scheme-number 0))
-(define q1 (make-scheme-number 1))
+(define p (make-scheme-number 0))
+(define q (make-scheme-number 1))
 
-(print (equ? p1 p2)) ; #t
-(print (equ? p1 q1)) ; #f
+(print (=zero? p)) ; #t
+(print (=zero? q)) ; #f
 
 ; END
