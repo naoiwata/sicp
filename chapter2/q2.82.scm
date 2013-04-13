@@ -7,8 +7,8 @@
     ((type-tags (map type-tag args)))
     (define (do-coerce x type)
       (let
-        ((coercion-type (get-coercion (type-tag x) type)))
-        (and coercion-type (coercion-type x))))
+        ((coercion (get-coercion (type-tag x) type)))
+        (and coercion (coercion x))))
     (define (find-proc-coerceds op args types)
       (if (null? types)
           #f
@@ -18,7 +18,7 @@
               ((coerceds (map (lambda (x) (do-coerce x type))) args))
               (if coerceds
                   (let 
-                    ((proc (get op (map type-tag type-tags))))
+                    ((proc (get op (map type-tag coerceds))))
                     (if proc
                         (cons proc coerceds)
                         (find-proc-coerceds op args (cdr types))))
@@ -27,10 +27,10 @@
       ((proc (get op type-tags)))
       (if proc
           (apply proc (map contents args))
-          (let
-            ((proc-coerceds (find-proc-coerceds op args type-tags)))
-            (apply (car proc-coerceds) (map contents (cdr proc-coerceds)))
-            (error "No method for these types"
-                     (list op type-tags)))))))
+          (let ((proc-coerceds (find-proc-coerceds op args type-tags)))
+            (if proc-coerceds
+                (apply (car proc-coerceds) (map contents (cdr proc-coerceds)))
+                (error "No method for these types -- APPLY-GENERIC"
+                       (list op type-tags))))))))
 
 ; END
