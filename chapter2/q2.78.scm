@@ -7,14 +7,14 @@
     ((pair? datum) (car datum))
     ((number? datum) 'scheme-number)
     (else
-      (error "BAD TAGGED DATUM -- TYPE-TAG" datum))))
+      "BAD TAGGED DATUM -- TYPE-TAG" datum)))
 
 (define (contents datum)
   (cond
     ((pair? datum) (cdr datum))
     ((number? datum) datum)
     (else
-      (error "BAD TAGGED DATUM -- CONTENTS" datum))))
+      "BAD TAGGED DATUM -- CONTENTS" datum)))
 
 (define (attach-tag type-tag contents)
   (if (eq? type-tag 'scheme-number)

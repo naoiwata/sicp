@@ -4,18 +4,24 @@
 
 ; utility settings -------------------------------------------------
 
-(define (attach-tag type-tag contents)
-  (cons type-tag contents))
-
 (define (type-tag datum)
-  (if (pair? datum)
-      (car datum)
-      (error "Bad tagged datum -- TYPE-TAG" datum)))
+  (cond
+    ((pair? datum) (car datum))
+    ((number? datum) 'scheme-number)
+    (else
+      "BAD TAGGED DATUM -- TYPE-TAG" datum)))
 
 (define (contents datum)
-  (if (pair? datum)
-      (cdr datum)
-      (error "Bad tagged datum -- CONTENTS" datum)))
+  (cond
+    ((pair? datum) (cdr datum))
+    ((number? datum) datum)
+    (else
+      "BAD TAGGED DATUM -- CONTENTS" datum)))
+
+(define (attach-tag type-tag contents)
+  (if (eq? type-tag 'scheme-number)
+      contents
+      (cons type-tag contents)))
 
 (define (apply-generic op . args)
   (let 
