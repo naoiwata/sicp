@@ -2,8 +2,74 @@
 ;; SICP Chapter2
 ;; question 2.79
 
-(add-load-path "." :relative)
-(load "q2.77.scm")
+; utility settings -------------------------------------------------
+
+(define (attach-tag type-tag contents)
+  (cons type-tag contents))
+
+(define (type-tag datum)
+  (if (pair? datum)
+      (car datum)
+      (error "Bad tagged datum -- TYPE-TAG" datum)))
+
+(define (contents datum)
+  (if (pair? datum)
+      (cdr datum)
+      (error "Bad tagged datum -- CONTENTS" datum)))
+
+(define (apply-generic op . args)
+  (let 
+    ((type-tags (map type-tag args)))
+    (let 
+      ((proc (get op type-tags)))
+      (if proc
+          (apply proc (map contents args))
+          (error
+           "No method for these types -- APPLY-GENERIC"
+           (list op type-tags))))))
+
+(define (gcd a b)
+  (if (= b 0)
+      a
+    (gcd b (remainder a b))))
+
+(define (square x) (* x x))
+
+; put and get procedures -------------------------------------------
+
+(define (make-table)
+  (let ((local-table (list '*table*)))
+    (define (lookup key-1 key-2)
+      (let ((subtable (assoc key-1 (cdr local-table))))
+        (if subtable
+            (let ((record (assoc key-2 (cdr subtable))))
+              (if record
+                  (cdr record)
+                  #f))
+            #f)))
+    (define (insert! key-1 key-2 value)
+      (let ((subtable (assoc key-1 (cdr local-table))))
+        (if subtable
+            (let ((record (assoc key-2 (cdr subtable))))
+              (if record
+                  (set-cdr! record value)
+                  (set-cdr! subtable
+                            (cons (cons key-2 value)
+                                  (cdr subtable)))))
+            (set-cdr! local-table
+                      (cons (list key-1
+                                  (cons key-2 value))
+                            (cdr local-table)))))
+      'ok)    
+    (define (dispatch m)
+      (cond ((eq? m 'lookup-proc) lookup)
+            ((eq? m 'insert-proc!) insert!)
+            (else (error "Unknown operation -- TABLE" m))))
+    dispatch))
+
+(define operation-table (make-table))
+(define get (operation-table 'lookup-proc))
+(define put (operation-table 'insert-proc!))
 
 ; ordinary procedure -----------------------------------------------
 
@@ -217,11 +283,13 @@
 ;; ------- add end --------
 
 ; test
-(define p1 (make-scheme-number 0))
-(define p2 (make-scheme-number 0))
-(define q1 (make-scheme-number 1))
-
-(print (equ? p1 p2)) ; #t
-(print (equ? p1 q1)) ; #f
+(use math.const)
+(print
+  (equ? (make-scheme-number 1) (make-scheme-number 1)) ; #t
+  (equ? (make-scheme-number 1) (make-scheme-number 2)) ; #f
+  (equ? (make-rational 1 2) (make-rational 2 4)) ; #t
+  (equ? (make-rational 1 2) (make-rational 1 3)) ; #f
+  (equ? (make-complex-from-real-imag 1 1) (make-complex-from-mag-ang (sqrt 2) pi/4)) ; #f
+  (equ? (make-complex-from-real-imag 1 1) (make-complex-from-real-imag 2 1))) ; #f
 
 ; END

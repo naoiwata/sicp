@@ -286,6 +286,15 @@
 (define (div x y) (apply-generic 'div x y))
 
 ; test
+(print 
+  (make-scheme-number 2) ; (scheme-number . 2)
+  (make-rational 3 2) ; (rational 3 . 2)
+  (make-from-real-imag 3 4) ; (rectangular 3 . 4)
+  (make-from-imag-ang 1 3) ; (polar 1 . 3)
+  (make-complex-from-real-imag 3 4) ; (complex rectangular 3 . 4)
+  (make-complex-from-mag-ang 1 3)) ; (complex polar 1 . 3)
+
+
 (define z 
   (make-complex-from-real-imag 3 4))
 ; -> (complex rectangular 3 . 4)
@@ -293,8 +302,7 @@
 (define (magnitude x) 
   (apply-generic 'magnitude x))
 
-(magnitude z)
-; 5
+(print (magnitude z)); 5
 
 #|
 (magnitude z) 
