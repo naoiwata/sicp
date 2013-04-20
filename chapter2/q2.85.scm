@@ -1,6 +1,6 @@
 ;; @author naoiwata
 ;; SICP Chapter2
-;; question 2.84
+;; question 2.85
 
 ; utility settings -------------------------------------------------
 
@@ -45,25 +45,45 @@
                   (if (eq? car-tower y)
                       (and (memq x (cdr tower)) 'GT)
                       (iter (cdr tower) x y))))))
-      (or (iter tower-of-type x y)
+      (or (iter types-tower x y)
           (error "Bad types -- COMPARE-TYPE" (list x y))))
+    ;; ------- add from -------
+    (define maybe-drop
+      (if (memq op '(equ? =zero? raise project))
+          (lambda (x) x)
+          drop))
+    ;; ------- add end --------
     ; inner procedure
+    ;; ----- changed from -----
     (let
       ((proc (get op type-tags)))
       (if proc
-          (apply proc (map contents args))
+          (maybe-drop (apply proc (map contents args)))
           (let
-            ((highest-type (find-highest-type type-tags)))
+            ((highest (find-highest-type type-tags)))
             (let
-              ((args-bis (map (lambda (x) (raise->type x highest-type)) args)))
+              ((args-bis (map (lambda (a) (raise->type a highest)) args)))
               (let
-                ((type-tags-bis (map type-tags args-bis)))
+                ((type-tags-bis (map type-tag args-bis)))
                 (let
                   ((proc-bis (get op type-tags-bis)))
                   (if proc-bis
-                      (apply proc-bis (map contents args-bis))
+                      (maybe-drop (apply proc-bis (map contents args-bis)))
                       (error "No method for these types -- APPLY-GENERIC"
                              (list op type-tags)))))))))))
+    ;; ----- changed end ------
+
+;; ------- add from -------
+(define (drop x)
+  (cond
+    ((boolean? x) x)
+    ((eq? (type-tag x) 'integer) x)
+    (else
+      (let
+        ((dropped (project x)))
+        (drop dropped)
+        x))))
+;; ------- add end --------
 
 (define (type-tag datum)
   (cond
@@ -215,6 +235,10 @@
     (zero? (numer x)))
   (define (rational->real x)
     (make-real (/ (numer x) (denom x))))
+  ;; ------- add from -------
+  (define (rational->integer x)
+    (make-integer (numer x)))
+  ;; ------- add end --------
   ;; interface to rest of the system
   (define (tag x) (attach-tag 'rational x))
   (put 'add '(rational rational)
@@ -233,6 +257,9 @@
        (lambda (n d) (tag (make-rat n d))))
   (put 'raise '(rational)
        (lambda (x) (rational->real x)))
+  ;; ------- add from -------
+  (put 'project '(rational) rational->integer)
+  ;; ------- add end --------
   'done)
 
 (define (make-rational n d)
@@ -245,6 +272,10 @@
     (attach-tag 'real x))
   (define (real->complex x)
     (make-complex-from-real-imag x 0))
+  ;; ------- add from -------
+  (define (real->rational x)
+    (make-rational (inexact->exact (truncate x)) 1))
+  ;; ------- add end --------
   (put 'add '(real real)
        (lambda (x y) (tag (+ x y))))
   (put 'sub '(real real)
@@ -261,6 +292,9 @@
        (lambda (x) (tag x)))
   (put 'raise '(real)
        (lambda (x) (real->complex x)))
+  ;; ------- add from -------
+  (put 'project '(real) real->rational)
+  ;; ------- add end --------
   'done)
 
 (define (make-real n)
@@ -278,18 +312,22 @@
              (square (imag-part z)))))
   (define (angle z)
     (atan (imag-part z) (real-part z)))
-  (define (make-from-imag-ang r a)
+  (define (make-from-mag-ang r a)
     (cons (* r (cos a)) (* r (sin a))))
   ;; interface to the rest of the system
   (define (tag x) (attach-tag 'rectangular x))
-  (put 'real-part '(rectangular) real-part)
-  (put 'imag-part '(rectangular) imag-part)
-  (put 'magnitude '(rectangular) magnitude)
-  (put 'angle '(rectangular) angle)
+  (put 'real-part '(rectangular)
+       (lambda (z) (make-real (real-part z))))
+  (put 'imag-part '(rectangular)
+       (lambda (z) (make-real (imag-part z))))
+  (put 'magnitude '(rectangular)
+       (lambda (z) (make-real (magnitude z))))
+  (put 'angle '(rectangular)
+       (lambda (z) (make-real (angle z))))
   (put 'make-from-real-imag 'rectangular
        (lambda (x y) (tag (make-from-real-imag x y))))
-  (put 'make-from-imag-ang 'rectangular
-       (lambda (r a) (tag (make-from-imag-ang r a))))
+  (put 'make-from-mag-ang 'rectangular
+       (lambda (r a) (tag (make-from-mag-ang r a))))
   'done)
 
 (define (make-from-real-imag x y)
@@ -301,7 +339,7 @@
   ;; internal procedures
   (define (magnitude z) (car z))
   (define (angle z) (cdr z))
-  (define (make-from-imag-ang r a) (cons r a))
+  (define (make-from-mag-ang r a) (cons r a))
   (define (real-part z)
     (* (magnitude z) (cos (angle z))))
   (define (imag-part z)
@@ -311,18 +349,22 @@
           (atan y x)))
   ;; interface to the rest of the system
   (define (tag x) (attach-tag 'polar x))
-  (put 'real-part '(polar) real-part)
-  (put 'imag-part '(polar) imag-part)
-  (put 'magnitude '(polar) magnitude)
-  (put 'angle '(polar) angle)
+  (put 'real-part '(polar)
+       (lambda (z) (make-real (real-part z))))
+  (put 'imag-part '(polar)
+       (lambda (z) (make-real (imag-part z))))
+  (put 'magnitude '(polar)
+       (lambda (z) (make-real (magnitude z))))
+  (put 'angle '(polar)
+       (lambda (z) (make-real (angle z))))
   (put 'make-from-real-imag 'polar
        (lambda (x y) (tag (make-from-real-imag x y))))
-  (put 'make-from-imag-ang 'polar
-       (lambda (r a) (tag (make-from-imag-ang r a))))
+  (put 'make-from-mag-ang 'polar
+       (lambda (r a) (tag (make-from-mag-ang r a))))
   'done)
 
-(define (make-from-imag-ang r a)
-  ((get 'make-from-imag-ang 'polar) r a))
+(define (make-from-mag-ang r a)
+  ((get 'make-from-mag-ang 'polar) r a))
 
 ; complex procedure ---------------------------------------------
 
@@ -330,21 +372,25 @@
   ;; imported procedures from rectangular and polar packages
   (define (make-from-real-imag x y)
     ((get 'make-from-real-imag 'rectangular) x y))
-  (define (make-from-imag-ang r a)
-    ((get 'make-from-imag-ang 'polar) r a))
+  (define (make-from-mag-ang r a)
+    ((get 'make-from-mag-ang 'polar) r a))
   ;; internal procedures
   (define (add-complex z1 z2)
-    (make-from-real-imag (+ (real-part z1) (real-part z2))
-                         (+ (imag-part z1) (imag-part z2))))
+    (make-from-real-imag
+     (+ (contents (real-part z1)) (contents (real-part z2)))
+     (+ (contents (imag-part z1)) (contents (imag-part z2)))))
   (define (sub-complex z1 z2)
-    (make-from-real-imag (- (real-part z1) (real-part z2))
-                         (- (imag-part z1) (imag-part z2))))
+    (make-from-real-imag
+     (- (contents (real-part z1)) (contents (real-part z2)))
+     (- (contents (imag-part z1)) (contents (imag-part z2)))))
   (define (mul-complex z1 z2)
-    (make-from-imag-ang (* (magnitude z1) (magnitude z2))
-                       (+ (angle z1) (angle z2))))
+    (make-from-mag-ang
+     (* (contents (magnitude z1)) (contents (magnitude z2)))
+     (+ (contents (angle z1))     (contents (angle z2)))))
   (define (div-complex z1 z2)
-    (make-from-imag-ang (/ (magnitude z1) (magnitude z2))
-                       (- (angle z1) (angle z2))))
+    (make-from-mag-ang
+     (/ (contents (magnitude z1)) (contents (magnitude z2)))
+     (- (contents (angle z1))     (contents (angle z2)))))
   (define (real-part z)
     (apply-generic 'real-part z))
   (define (imag-part z)
@@ -354,11 +400,14 @@
   (define (angle z)
     (apply-generic 'angle z))
   (define (equ? x y)
-    (and (= (real-part x) (real-part y))
-         (= (imag-part x) (imag-part y))))
+    (and (= (contents (real-part x)) (contents (real-part y)))
+         (= (contents (imag-part x)) (contents (imag-part y)))))
   (define (=zero? x)
-    (and (zero? (real-part x)) 
-         (zero? (imag-part x))))
+    (and (zero? (contents (real-part x))) 
+         (zero? (contents (imag-part x)))))
+  ;; ------- add from -------
+  (define (complex->real z) (real-part z))
+  ;; ------- add end --------
   ;; interface to rest of the system
   (define (tag z) (attach-tag 'complex z))
   (put 'add '(complex complex)
@@ -371,8 +420,8 @@
        (lambda (z1 z2) (tag (div-complex z1 z2))))
   (put 'make-from-real-imag 'complex
        (lambda (x y) (tag (make-from-real-imag x y))))
-  (put 'make-from-imag-ang 'complex
-       (lambda (r a) (tag (make-from-imag-ang r a))))
+  (put 'make-from-mag-ang 'complex
+       (lambda (r a) (tag (make-from-mag-ang r a))))
   (put 'real-part '(complex) real-part)
   (put 'imag-part '(complex) imag-part)
   (put 'magnitude '(complex) magnitude)
@@ -381,13 +430,16 @@
        (lambda (z1 z2) (eq? z1 z2)))
   (put '=zero? 'complex
        (lambda (z1) (=zero? z1)))
+  ;; ------- add from -------
+  (put 'project '(complex) complex->real)
+  ;; ------- add end --------
   'done)
 
 (define (make-complex-from-real-imag x y)
   ((get 'make-from-real-imag 'complex) x y))
 
 (define (make-complex-from-mag-ang r a)
-  ((get 'make-from-imag-ang 'complex) r a))
+  ((get 'make-from-mag-ang 'complex) r a))
 
 (install-rectangular-package)
 (install-polar-package)
@@ -409,21 +461,18 @@
 (define (equ? x)      (apply-generic 'equ? x))
 (define (=zero? x)    (apply-generic '=zero? x))
 (define (raise x)     (apply-generic 'raise x))  
-
+;; ------- add from -------
+(define (project x)   (apply-generic 'project x))  
+;; ------- add end --------
+  
 ; test ----------------------------------------------------
-(define int7 (make-integer 7))
-(define rat7 (raise int7))
-(define real7 (raise rat7))
-(define comp7 (raise real7))
+(define z1 (make-complex-from-real-imag 3 4))
+(define z2 (make-complex-from-real-imag 1.5 2))
+(define z3 (make-complex-from-real-imag 1.5 -2))
 
-(print 
-  (contents int7)   ; 7
-  (contents rat7)   ; (7 . 1)
-  (contents real7)  ; 7
-  (contents comp7)  ; (rectangular 7 . 0)
-  (type-tag int7)   ; integer
-  (type-tag rat7)   ; rational
-  (type-tag real7)  ; real
-  (type-tag comp7)) ; complex
+(print
+  (add z1 z2) ; (complex rectangular 4.5 . 6)
+  (mul z2 z3) ; (complex polar 6.25 . 0.0)
+  (add z2 z3)) ; (complex rectangular 3.0 . 0)
 
 ; END
