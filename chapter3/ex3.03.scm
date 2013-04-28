@@ -20,7 +20,7 @@
           ((eq? m 'widthdraw) widthdraw)
           ((eq? m 'deposit) deposit)
           (else (error "Unknown request -- MEKE-AMOUNT" m)))
-        (else (error "Incorrect password" p))))
+        (error "Incorrect password" p)))
   dispatch)
 
 ; test
