@@ -14,7 +14,7 @@
   (define (deposit amount)
     (set! balance (+ balance amount))
     balance)
-  (define (call-the-cops) (error "called 119 :("))
+  (define (call-the-cops) (error "called 110 :("))
   (define incorrect-types-num 0)
   (define (dispatch p m)
     (if (eq? p password)
@@ -41,6 +41,6 @@
 ((acc 'alpaca 'widthdraw) 40)
 ((acc 'alpaca 'widthdraw) 40)
 ((acc 'alpaca 'widthdraw) 40)
-((acc 'alpaca 'widthdraw) 40) ; called 119 :(
+((acc 'alpaca 'widthdraw) 40) ; called 110 :(
 
 ; END
