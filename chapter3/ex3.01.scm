@@ -16,4 +16,16 @@
 (print (A 10)) ; 15
 (print (A 10)) ; 25
 
+; another solution
+
+(define (make-accumlator2 initial-value)
+  (lambda (value)
+      (set! initial-value (+ initial-value value))
+      initial-value))
+
+(define B (make-accumlator2 5))
+
+(print (B 10)) ; 15
+(print (B 10)) ; 25
+
 ; END
