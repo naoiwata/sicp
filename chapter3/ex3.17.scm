@@ -31,7 +31,7 @@
 (set-car! list7-2 list7-3) ; ((a))
 (set-cdr! list7-2 list7-3) ; ((a) a)
 (set-car! list7-1 list7-2) ; (((a) a))
-(set-cdr! list7-1 list7-2) ; (((a) a) (a) a)
+(set-cdr! list7-1 list7-2) ; (((a) a) ((a) a))
  
 (define linf '(a b c))
 (set-cdr! (cdr (cdr linf)) linf)
