@@ -78,8 +78,34 @@
      (error "no queue"))
     (else
       (set-rear-ptr! queue (prev-node (rear-ptr queue))))))
+; display
+(define (display-queue queue)
+  (define (display-queue-internal q)
+    (cond ((eq? q (rear-ptr queue))
+           (display " ")
+           (display (value-node q)))
+          (else
+           (begin (display " ")
+                  (display (value-node q))
+                  (display-queue-internal (next-node q))))))
+  (if (empty-queue? queue)
+      (display "empty queue\n")
+      (begin
+        (display "(")
+        (display-queue-internal (front-ptr queue))
+        (display ")\n"))))
 
 ; test
-(define q1 (make-queue))
+(define q (make-queue))
+(display-queue q) ; empty queue
+(front-insert-queue! q 'a)
+(display-queue q) ; (a)
+(rear-insert-queue! q 'b)
+(display-queue q) ; (a b)
+(front-delete-queue! q)
+(display-queue q) ; (b)
+(rear-insert-queue! q 'c)
+(front-delete-queue! q)
+(display-queue q) ; (c)
 
 ; END
