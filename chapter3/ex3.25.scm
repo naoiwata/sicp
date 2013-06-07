@@ -55,7 +55,4 @@
 (print (lookup '(2 1 1))) ; banana-01-01
 (print (lookup '(2 2 1))) ; #f
 
-; compared with ex2.66
-; http://github.com/naoiwata/sicp/blob/master/chapter2/q2.66.scm
-
 ; END
