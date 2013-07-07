@@ -31,7 +31,8 @@
 
 ; insert queue to the rear
 (define (insert-queue! queue item)
-  (let ((new-pair (cons item '())))
+  (let 
+    ((new-pair (cons item '())))
     (cond 
       ((empty-queue? queue)
        (set-front-ptr! queue new-pair)
