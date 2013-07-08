@@ -1,7 +1,7 @@
 ;;
 ;; @author naoiwata
 ;; SICP Chapter3
-;; 3.3.4 Representing Tables
+;; 3.3.4 A Simulator for Digital Circuits
 ;;
 
 ; ------------------------------------------------------------------------
