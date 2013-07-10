@@ -130,38 +130,7 @@
         (first-item)
         (remove-first-agenda-item! the-agenda)
         (propagate))))
-
-; ------------------------------------------------------------------------
-; A sample simulation
-; ------------------------------------------------------------------------
-
-(define (prove name wire)
-  (add-action!
-    wire
-    (lambda (x)
-      (newline)
-      (display name)
-      (display " ")
-      (display (current-time the-agenda))
-      (display " new-value = ")
-      (display get-signal wire))))
-
-(define the-agenda (make-agenda))
-
-(define inverter-delay 2)
-
-(define and-gate-delay 3)
-
-(define or-gate-delay 5)
-
-(define input-1 (make-wire))
-
-(define input-2 (make-wire))
-
-(define sum (make-wire))
-
-(define carry (make-wire))
-
+  
 ; ------------------------------------------------------------------------
 ; Implementing the agenda
 ; ------------------------------------------------------------------------
@@ -236,10 +205,41 @@
 
 (define (first-agenda-item agenda)
   (if (empty-agenda? agenda)
-      (error "ERRROR")
+      (error "ERROR")
       (let
         ((first-seg (first-segment-agenda)))
         (set-current-time! agenda (segment-time first-seg))
         (front-queue (segment-queue first-seg)))))  
+
+; ------------------------------------------------------------------------
+; A sample simulation
+; ------------------------------------------------------------------------
+
+(define (probe name wire)
+  (add-action!
+    wire
+    (lambda (x)
+      (newline)
+      (display name)
+      (display " ")
+      (display (current-time the-agenda))
+      (display " new-value = ")
+      (display get-signal wire))))
+
+(define the-agenda (make-agenda))
+
+(define inverter-delay 2)
+
+(define and-gate-delay 3)
+
+(define or-gate-delay 5)
+
+(define input-1 (make-wire))
+
+(define input-2 (make-wire))
+
+(define sum (make-wire))
+
+(define carry (make-wire))
 
 ; END
