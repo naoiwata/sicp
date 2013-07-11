@@ -295,8 +295,8 @@
 (print the-agenda) 
 ; (3 (6 (#<closure (and-gate and-action-procedure #f)> #<closure (and-gate and-action-procedure #f)>) #<closure (and-gate and-action-procedure #f)>))
 (print (propagate)) 
-; and-out 6 New-value = 1
-; and-out 6 New-value = 0
+  ; and-out 6 New-value = 1
+  ; and-out 6 New-value = 0
 ; done
 
 ; ------------------------------------------------------------------------
@@ -371,5 +371,32 @@
 ; Discussion
 ; ------------------------------------------------------------------------
 
+#|
+test-1(最初に入ったものが最初に出る)とtest-2(最後に入ったものが最初に出る)を比較する.
+想定通りの正しい動作は全社のtest-1である.
+まず, 各々にa, b, cを順に入れる時のデータ構造を考える.
+test-1では(a b c), test-2では(c b a)となり双方共にcarである左の値から取り出される.
+
+本問題をテストし出力結果を見ると
+test-1は and-out 6 New-value = 0
+test-2 は and-out 6 New-value = 1
+が出力されているのが分かる.
+ここで, 双方が時に従ってどのような状態遷移を経るか考える.
+
+ time |  in-1  | in-2  |  out(new-value)
+  0   |   0    |   0   |   -
+ -> in-1 = 0, in-2 = 1 を代入
+  3   |   0    |   0   |   0   <- (set-signal! and-in-1 0) :先頭の in-1 が代入され new-value が0に定義される
+  3   |   0    |   1   |   0   <- (set-signal! and-in-2 1) :後ろの in-2 が代入され in-2 が変化, new-value が0に定義される
+ -> in-1 = 1, in-2 = 0 を代入
+  6   |   1    |   1   |   1   <- (set-signal! and-in-1 1) :先頭の in-1 が代入され in-1 が変化, new-value が1に定義される(new-1)
+  6   |   1    |   0   |   0   <- (set-signal! and-in-2 0) :後ろの in-2 が代入され in-2 が変化, new-value が0に定義される(new-2)
+
+test-1 では出力結果(set-signal!の返り値)を順に登録して行くと ((new-1) (new-2)) の構造になり, 先頭から順に価を返すので解は (new-2)の0を返すが, 
+test-2 では出力結果(set-signal!の返り値)を順に登録して行くと ((new-2) (new-1)) の構造になり先頭から順に価を返すので解は (new-1)の1を返し, 
+以上のような出力結果になったと考えられる.
+よって, 事象駆動シミュレーションではデータ構造の値の代入の順番と代入するデータ構造の場所, そしてそれらの評価の順を考慮して手続きの時間の流れを考える必要があると言える.
+
+|#
 
 ; END
