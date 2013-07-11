@@ -26,6 +26,6 @@
 ; discussion
 ; ------------------------------------------------------------------------
 
-; 遅延時間は (+ (* inverter-delay 3) and-gate-delay)
+; 遅延時間は (+ (* inverter-delay 2) and-gate-delay)
 
 ; END
