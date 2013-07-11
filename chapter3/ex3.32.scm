@@ -8,65 +8,52 @@
 ; queue
 ; ------------------------------------------------------------------------
 
-(define (make-queue)
+; front
+(define (front-ptr queue) (car queue))
+
+; rear
+(define (rear-ptr queue) (cdr queue))
+
+; set! front
+(define (set-front-ptr! queue item) (set-car! queue item))
+
+; set! rear
+(define (set-rear-ptr! queue item) (set-cdr! queue item))
+
+; null? front
+(define (empty-queue? queue) (null? (front-ptr queue)))
+
+; make queue
+(define (make-queue) (cons '() '()))
+
+; return front
+(define (front-queue queue)
+  (if (empty-queue? queue)
+      (error "FRONT called with an empty queue" queue)
+      (car (front-ptr queue))))
+
+; insert queue to the rear
+(define (insert-queue! queue item)
   (let 
-    ((front-ptr '())
-     (rear-ptr '()))
-    ;; internal procedures
-    ; set! front
-    (define (set-front-ptr! item) (set! front-ptr item))
-    ; set! rear
-    (define (set-rear-ptr! item)  (set! rear-ptr item))
-    ; null? front
-    (define (empty-queue?) (null? front-ptr))
-    ; return front
-    (define (front-queue)
-      (if (empty-queue?)
-          (error "FRONT called with an empty queue")
-          front-ptr))
-    ; insert queue to the rear
-    (define (insert-queue! item)
-      (let 
-        ((new-pair (cons item '())))
-        (cond 
-          ((empty-queue?)
-           (set-front-ptr! new-pair)
-           (set-rear-ptr!  new-pair)
-           (front-queue))
-          (else
-            (set-cdr! rear-ptr new-pair)
-            (set-rear-ptr! new-pair)
-            (front-queue)))))
-    ; delete front
-    (define (delete-queue!)
-      (cond 
-        ((empty-queue?)
-         (error "DELETE! called with an empty queue"))
-        (else
-          (set-front-ptr! (cdr front-ptr))
-          (front-queue))))
-    ; dispatch
-    (define (dispatch m)
-      (cond
-        ((eq? m 'insert-queue!) insert-queue!)
-        ((eq? m 'delete-queue!) (delete-queue!))
-        ((eq? m 'front-queue)   front-queue)
-        ((eq? m 'empty-queue?)  empty-queue?)
-        (else
-          (error "Undefined operation -- MAKE-QUEUE" m))))
-    dispatch))
+    ((new-pair (cons item '())))
+    (cond 
+      ((empty-queue? queue)
+       (set-front-ptr! queue new-pair)
+       (set-rear-ptr! queue new-pair)
+       queue)
+      (else
+        (set-cdr! (rear-ptr queue) new-pair)
+        (set-rear-ptr! queue new-pair)
+        queue))))
 
-(define (insert-queue! queue item) 
-  ((queue 'insert-queue!) item))
-
-(define (delete-queue! queue) 
-  (queue 'delete-queue!))
-
-(define (front-queue queue) 
-  (queue 'front-queue))
-
-(define (empty-queue? queue) 
-  (queue 'empty-queue?))
+; delete front
+(define (delete-queue! queue)
+  (cond 
+    ((empty-queue? queue)
+     (error "DELETE! called with an empty queue" queue))
+    (else
+      (set-front-ptr! queue (cdr (front-ptr queue)))
+      queue)))
 
 ; ------------------------------------------------------------------------
 ; import 3.3.4
@@ -277,7 +264,7 @@
         (front-queue (segment-queue first-seg)))))
 
 ; ------------------------------------------------------------------------
-; test
+; test-1 : first in, first out
 ; ------------------------------------------------------------------------
 
 (define the-agenda (make-agenda))
@@ -285,16 +272,104 @@
 (define and-gate-delay 3)
 (define or-gate-delay 5)
 
-(define input-1 (make-wire))
-(define input-2 (make-wire))
-(define sum (make-wire))
-(define carry (make-wire))
+(define and-in-1 (make-wire))
+(define and-in-2 (make-wire))
+(define and-out  (make-wire))
 
-(probe 'sum sum)     ; sum 0 New-value = 0 
-(probe 'carry carry) ; carry 0 New-value = 0
+(probe 'and-out and-out) 
+; and-out 0 New-value = 0 
+(print (and-gate and-in-1 and-in-2 and-out)) 
+; ok
+(print (set-signal! and-in-1 0)) 
+; done
+(print (set-signal! and-in-2 1)) 
+; done
+(print the-agenda)
+; (0 (3 (#<closure (and-gate and-action-procedure #f)> #<closure (and-gate and-action-procedure #f)> #<closure (and-gate and-action-procedure #f)>) #<closure (and-gate and-action-procedure #f)>))
+(print (propagate)) 
+; done
+(print (set-signal! and-in-1 1)) 
+; done
+(print (set-signal! and-in-2 0)) 
+; done
+(print the-agenda) 
+; (3 (6 (#<closure (and-gate and-action-procedure #f)> #<closure (and-gate and-action-procedure #f)>) #<closure (and-gate and-action-procedure #f)>))
+(print (propagate)) 
+; and-out 6 New-value = 1
+; and-out 6 New-value = 0
+; done
 
-(half-adder input-1 input-2 sum carry) ; ok
-(set-signal! input-1 1)                ; done
-(propagate)                            ; done
+; ------------------------------------------------------------------------
+; test-2 : last in, first out
+; ------------------------------------------------------------------------
+
+; front
+(define (front-ptr queue) queue)
+
+; null? front
+(define (empty-queue? queue) (null? (car queue)))
+
+; make queue
+(define (make-queue) '(()))
+
+; return front
+(define (front-queue queue)
+  (if (empty-queue? queue)
+      (error "FRONT called with an empty queue" queue)
+      (car (car queue))))
+
+; insert queue to the rear
+(define (insert-queue! queue item)
+  (let 
+    ((new-pair (cons item (car queue))))
+    (set-car! queue new-pair)))
+
+; delete front
+(define (delete-queue! queue)
+  (cond 
+    ((empty-queue? queue)
+     (error "DELETE! called with an empty queue" queue))
+    (else 
+      (set-car! queue (cdr (car queue)))
+      queue)))
+
+(define (print-queue queue)
+  (car queue))
+
+(define the-agenda (make-agenda))
+(define inverter-delay 2)
+(define and-gate-delay 3)
+(define or-gate-delay 5)
+
+(define and-in-1 (make-wire))
+(define and-in-2 (make-wire))
+(define and-out  (make-wire))
+
+(probe 'and-out and-out) 
+; and-out 0 New-value = 0 
+(print (and-gate and-in-1 and-in-2 and-out)) 
+; ok
+(print (set-signal! and-in-1 0)) 
+; done
+(print (set-signal! and-in-2 1)) 
+; done
+(print the-agenda)
+; (0 (3 (#<closure (and-gate and-action-procedure #f)> #<closure (and-gate and-action-procedure #f)> #<closure (and-gate and-action-procedure #f)>) #<closure (and-gate and-action-procedure #f)>))
+(print (propagate)) 
+; done
+(print (set-signal! and-in-1 1)) 
+; done
+(print (set-signal! and-in-2 0)) 
+; done
+(print the-agenda) 
+; (3 (6 (#<closure (and-gate and-action-procedure #f)> #<closure (and-gate and-action-procedure #f)>) #<closure (and-gate and-action-procedure #f)>))
+(print (propagate)) 
+; and-out 6 New-value = 1
+; done
+
+; ------------------------------------------------------------------------
+; Discussion
+; ------------------------------------------------------------------------
+
 
 ; END
