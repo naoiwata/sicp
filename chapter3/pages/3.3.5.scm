@@ -8,13 +8,13 @@
 ; Representing connectors
 ; ------------------------------------------------------------------------
 
-(define (make-conector)
-  (let
-    ((value #f)
-     (informant #f)
+(define (make-connector)
+  (let 
+    ((value #f) 
+     (informant #f) 
      (constraints '()))
     (define (set-my-value newval setter)
-      (cond
+      (cond 
         ((not (has-value? me))
          (set! value newval)
          (set! informant setter)
@@ -22,13 +22,12 @@
                           inform-about-value
                           constraints))
         ((not (= value newval))
-         (error "contradiction" (list value newval)))
-        (else
+         (error "Contradiction" (list value newval)))
+        (else 
           'ignored)))
     (define (forget-my-value retractor)
       (if (eq? retractor informant)
-          (begin 
-            (set! informant #f)
+          (begin (set! informant #f)
             (for-each-except retractor
                              inform-about-no-value
                              constraints))
@@ -41,23 +40,31 @@
           (inform-about-value new-constraint))
       'done)
     (define (me request)
-      (cond
+      (cond 
         ((eq? request 'has-value?)
-         (if informant #t #f))
-        ((eq? request 'value)      value)
-        ((eq? request 'set-value!) set-my-value)
-        ((eq? request 'forget)     forget-my-value)
-        ((eq? request 'connect)    connect)
-        (else
-          (error "unknown operation" request))))
+         (if informant
+             #t 
+             #f))
+        ((eq? request 'value) 
+         value)
+        ((eq? request 'set-value!) 
+         set-my-value)
+        ((eq? request 'forget) 
+         forget-my-value)
+        ((eq? request 'connect) 
+         connect)
+        (else 
+          (error "Unknown operation -- CONNECTOR" request))))
     me))
 
 (define (for-each-except exception procedure list)
   (define (loop items)
-    (cond
-      ((null? items) 'dome)
-      ((eq? (car items) exception) (loop (cdr items)))
-      (else
+    (cond 
+      ((null? items) 
+       'done)
+      ((eq? (car items) exception) 
+       (loop (cdr items)))
+      (else 
         (procedure (car items))
         (loop (cdr items)))))
   (loop list))
@@ -72,7 +79,7 @@
   ((connector 'set-value!) new-value informant))
 
 (define (forget-value! connector retractor)
-  ((connector 'forget-value!) retractor))
+  ((connector 'forget) retractor))
 
 (define (connect connector new-constraint)
   ((connector 'connect) new-constraint))
@@ -84,7 +91,7 @@
 ; adder
 (define (adder a1 a2 sum)
   (define (process-new-value)
-    (cond
+    (cond 
       ((and (has-value? a1) (has-value? a2))
        (set-value! sum
                    (+ (get-value a1) (get-value a2))
@@ -99,70 +106,69 @@
                    me))))
   (define (process-forget-value)
     (forget-value! sum me)
-    (forget-value! a1  me)
-    (forget-value! a2  me)
+    (forget-value! a1 me)
+    (forget-value! a2 me)
     (process-new-value))
   (define (me request)
-    (cond
-      ((eq? request 'i-have-a-value)
+    (cond 
+      ((eq? request 'I-have-a-value)
        (process-new-value))
-      ((eq? request 'i-lost-my-value)
+      ((eq? request 'I-lost-my-value)
        (process-forget-value))
       (else
-        (error "unknown request" request))))
-  (connect a1  me)
-  (connect a2  me)
+        (error "Unknown request -- ADDER" request))))
+  (connect a1 me)
+  (connect a2 me)
   (connect sum me)
   me)
 
 ; multiplier
 (define (multiplier m1 m2 product)
   (define (process-new-value)
-    (cond
-      ((or 
-         (and (has-value? m1) (= (get-value m1) 0))
-         (and (has-value? m2) (= (get-value m2) 0)))
+    (cond 
+      ((or (and (has-value? m1) (= (get-value m1) 0))
+           (and (has-value? m2) (= (get-value m2) 0)))
        (set-value! product 0 me))
       ((and (has-value? m1) (has-value? m2))
        (set-value! product
                    (* (get-value m1) (get-value m2))
                    me))
-      ((and (has-value? m1) (has-value? product))
+      ((and (has-value? product) (has-value? m1))
        (set-value! m2
                    (/ (get-value product) (get-value m1))
                    me))
-      ((and (has-value? m2) (has-value? product))
+      ((and (has-value? product) (has-value? m2))
        (set-value! m1
                    (/ (get-value product) (get-value m2))
                    me))))
   (define (process-forget-value)
     (forget-value! product me)
-    (forget-value! m1      me)
-    (forget-value! m2      me)
+    (forget-value! m1 me)
+    (forget-value! m2 me)
     (process-new-value))
   (define (me request)
-    (cond
-      ((eq? request 'i-have-a-value)
+    (cond 
+      ((eq? request 'I-have-a-value)
        (process-new-value))
-      ((eq? request 'i-lost-my-value)
+      ((eq? request 'I-lost-my-value)
        (process-forget-value))
       (else
-        (error "unknown request" request))))
-  (connect m1  me)
-  (connect m2  me)
+        (error "Unknown request -- MULTIPLIER" request))))
+  (connect m1 me)
+  (connect m2 me)
   (connect product me)
   me)
 
 ; sub methods
 (define (inform-about-value constraint)
-  (constraint 'i-have-a-value))
+  (constraint 'I-have-a-value))
 
 (define (inform-about-no-value constraint)
-  (constraint 'inform-about-no-value))
+  (constraint 'I-lost-my-value))
 
 (define (constant value connector)
   (define (me request)
-    (error "unknown request" request))
+    (error "Unknown request -- CONSTANT" request))
   (connect connector me)
   (set-value! connector value me)
   me)
@@ -179,13 +185,13 @@
   (define (process-forget-value)
     (print-probe "?"))
   (define (me request)
-    (cond
-      ((eq? request 'i-have-a-value)
+    (cond 
+      ((eq? request 'I-have-a-value)
        (process-new-value))
-      ((eq? request 'i-lost-my-value)
+      ((eq? request 'I-lost-my-value)
        (process-forget-value))
       (else
-        (error "unknown request" request))))
+        (error "Unknown request -- PROBE" request))))
   (connect connector me)
   me)
 
@@ -195,11 +201,11 @@
 
 (define (celsius-fahrenheit-converter c f)
   (let
-    ((u (make-conector))
-     (v (make-conector))
-     (w (make-conector))
-     (x (make-conector))
-     (y (make-conector)))
+    ((u (make-connector))
+     (v (make-connector))
+     (w (make-connector))
+     (x (make-connector))
+     (y (make-connector)))
     (multiplier c w u)
     (multiplier v x u)
     (adder v y f)
@@ -207,8 +213,24 @@
     (constant 5 x)
     (constant 32 y)))
 
-(define C (make-conector))
-(define F (make-conector))
+(define C (make-connector))
+(define F (make-connector))
 (celsius-fahrenheit-converter C F)
+(probe "celsius temp" C)
+(probe "fahrenheit temp" F)
+
+(set-value! C 25 'user)
+; Probe: celsius temp = 25
+; Probe: fahrenheit temp = 77
+
+; (set-value! F 212 'user)
+; "error": contradiction (77 212)
+
+(forget-value! C 'user)
+; Probe: celsius temp = ?
+; Probe: fahrenheit temp = ?
+
+(set-value! F 212 'user)
+; Probe: celsius temp = 100
 
 ; END
