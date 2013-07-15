@@ -231,6 +231,7 @@
 ; Probe: fahrenheit temp = ?
 
 (set-value! F 212 'user)
+; Probe: fahrenheit temp = 212
 ; Probe: celsius temp = 100
 
 ; END
