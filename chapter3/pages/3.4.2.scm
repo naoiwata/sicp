@@ -118,7 +118,7 @@
   (if (car cell)
       #t
       (begin 
-        (set-car! cell true)
+        (set-car! cell #t)
         #f)))
 
 ; END
