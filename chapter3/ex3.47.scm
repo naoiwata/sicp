@@ -8,6 +8,17 @@
 ; question (a)
 ; ------------------------------------------------------------------------
 
+(define (make-mutex)
+  (let 
+    ((cell (list #f)))
+    (define (the-mutex m)
+      (cond 
+        ((eq? m 'acquire)
+         (if (test-and-set! cell)
+             (the-mutex 'acquire)))
+        ((eq? m 'release) (clear! cell))))
+    the-mutex))
+
 (define (make-semaphore n)
   ((let 
      ((mutex (make-mutex))
