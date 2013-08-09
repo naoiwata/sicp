@@ -14,8 +14,6 @@
                  result)
           result))))
 
-(define-macro (delay exp) `(lambda () ,exp))
-
 (define-macro (delay exp) `(memo-proc (lambda () ,exp)))
 
 (define (force exp) (exp))
