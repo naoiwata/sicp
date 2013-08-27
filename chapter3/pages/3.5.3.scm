@@ -121,7 +121,7 @@
   (stream-map stream-car
               (make-tableau transform s)))
 
-(display-stream (accelerated-square euler-transform pi-stream)))
+(display-stream (accelerated-square euler-transform pi-stream))
 
 ; 4.0
 ; 3.166666666666667
