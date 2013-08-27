@@ -87,3 +87,49 @@
 ; 3.1941879092319425
 ; 3.09162380666784
 
+(define square (lambda (x) (* x x)))
+
+(define (euler-transform s)
+  (let 
+    ((s0 (stream-ref s 0))
+     (s1 (stream-ref s 1))
+     (s2 (stream-ref s 2)))
+    (cons-stream
+      (- s2 (/ (square (- s2 s1))
+               (+ s0 (* -2 s1) s2)))
+      (euler-transform (stream-cdr s)))))
+  
+(display-stream (euler-transform pi-stream))
+
+; 3.166666666666667D
+; 3.1333333333333337
+; 3.1452380952380956
+; 3.13968253968254
+; 3.1427128427128435
+; 3.1408813408813416
+; 3.142071817071818
+; 3.1412548236077655
+; 3.1418396189294033
+; 3.141406718496503
+
+(define (make-tableau transform s)
+  (cons-stream s
+               (make-tableau transform
+                             (transform s))))
+
+(define (accelerated-square transform s)
+  (stream-map stream-car
+              (make-tableau transform s)))
+
+(display-stream (accelerated-square euler-transform pi-stream)))
+
+; 4.0
+; 3.166666666666667
+; 3.142105263157895
+; 3.141599357319005
+; 3.1415927140337785
+; 3.1415926539752927
+; 3.1415926535911765
+; 3.141592653589778
+; 3.1415926535897953
+; 3.141592653589795
