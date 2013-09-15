@@ -39,3 +39,34 @@
          (procedure-environment procedure))))
     (else
       (error "unknown expression" procedure))))
+
+; arguments
+(define (list-of-values exps env)
+  (if (no-operands? exps)
+      '()
+      (cons
+        (eval (first-operand exps) env)
+        (list-of-values (rest-operands exps) env))))
+
+; if
+(define (eval-if exp env)
+  (if (true? (if-predicate exp) env)
+      (eval (if-consequent exp) env)
+      (eval (if-alternative exp) env)))
+
+; sequence
+(define (eval-sequence exps env)
+  (cond
+    ((last-exp? exps) (eval (first-exp exps) env))
+    (else
+      (eval (first-exp exps) env)
+      (eval-sequence (rest-exps exps) env))))
+
+; assignment
+(define (eval-assignment exp env)
+  (set-variable! (definition-bariable exp)
+                 (eval (definition-value exp) env)
+                 env)
+  'ok)
+
+; END
