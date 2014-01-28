@@ -10,11 +10,11 @@
 
 (add-load-path "./pages/" :relative)
 (load "stream.scm")
+(load "3.5.2.scm")
 
 (define (ln-summands n)
   (cons-stream (/ 1.0 n)
                (stream-map - (ln-summands (+ n 1)))))
-
 (define ln-stream
   (partial-sums (ln-summands 1)))
 
@@ -25,7 +25,7 @@
 ; partial-sums
 (map 
   (lambda (x) (print (stream-ref ln-stream x))) 
-  (iota 20))
+  (iota 2000))
 ; 1.0
 ; 0.5
 ; 0.8333333333333333
@@ -46,8 +46,14 @@
 ; 0.6661398242280596
 ; 0.718771403175428
 ; 0.6687714031754279
+; ...
+; 0.6933974934353783
+; 0.6928969929348777
+; 0.6933972430599402
+; 0.6928972430599403 <= n = 2000
 
 ; euler-transform
+(define square (lambda (x) (* x x)))
 (define (euler-transform s)
   (let 
     ((s0 (stream-ref s 0))

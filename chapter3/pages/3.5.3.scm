@@ -66,7 +66,7 @@
   (scale-stream (partial-sums (pi-summands 1)) 4))
 
 (print (map (lambda (x) (print (stream-ref pi-stream x))) (iota 2000)))
-(print "done")
+
 ; 4.0
 ; 2.666666666666667
 ; 3.466666666666667
