@@ -37,15 +37,23 @@
       weight)))
 
 ; (a)
-(define (sum-i+j x)
-  (+ (car x) (cadr x)))
+(define (weight-sum-a pairs)
+  (+ (car pairs) (cadr pairs)))
+(define sum-ij-a
+        (weighted-pairs integers integers weight-sum-a))
 
 ; (b)
-(define (sum-2i+3j+5ij x)
-  (let
-    ((i (car x))
-     (j (cadr x)))
-    (+ (* 2 i) (* 3 j) (* 5 i j))))
+(define (weight-sum-b pairs)
+  (+ (* 2 (car pairs)) (* 3 (cadr pairs)) (* 5 (car pairs) (cadr pairs))))
+(define integers-235
+  (stream-filter
+    (lambda (x) 
+      (and (not (= (remainder x 2) 0))
+           (not (= (remainder x 3) 0))
+           (not (= (remainder x 5) 0))))
+    integers))
+(define sum-ij-b
+        (weighted-pairs integers-235 integers-235 weight-sum-b))
 
 ; ------------------------------------------------------------------------
 ; test
