@@ -13,6 +13,6 @@
 
 ; step : Θ(n)
 ; space: (Θ(n))^(kind-of-coins)
-; see naoiwata.blogspot.com
+; see http://naoiwata.blogspot.jp/2013/02/sicp-orders-of-growth.html
 
 ;; END
