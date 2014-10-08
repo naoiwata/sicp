@@ -70,5 +70,3 @@
   (lambda (n) (stream-ref pythagoras n))
   (iota 4))
 ; ((3 4 5) (6 8 10) (5 12 13) (9 12 15))
-
-; END

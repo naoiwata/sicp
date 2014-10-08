@@ -71,5 +71,3 @@
   (lambda (x) (stream-ref square-stream x))
   (iota 10))
 ; (325 425 650 725 845 850 925 1025 1105 1105)
-
-; END

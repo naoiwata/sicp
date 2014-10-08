@@ -70,5 +70,3 @@
   (lambda (x) (stream-ref (weighted-pairs integers integers sum-2i+3j+5ij) x))
   (iota 10))
 ; ((1 1) (1 2) (1 3) (2 2) (1 4) (1 5) (2 3) (1 6) (2 4) (1 7))
-
-; END
