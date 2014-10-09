@@ -193,3 +193,14 @@
       (pairs (stream-cdr s) (stream-cdr t)))))
 
 
+; ------------------------------------------------------------------------
+; Streams as signals
+; ------------------------------------------------------------------------
+
+(define (integral integrand initial-value dt)
+  (define int
+    (cons-stream initial-value
+                 (add-streams (scale-stream integrand dt)
+                              int)))
+  int)
+
