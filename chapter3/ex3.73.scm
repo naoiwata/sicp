@@ -38,6 +38,6 @@
    (stream-map + s1 s2))
 
 (print (map
-  (lambda (x) (stream-ref  (RC1 ones 10) x))
+  (lambda (x) (stream-ref (RC1 ones 10) x))
   (iota 10)))
 ;; => (15 15.5 16.0 16.5 17.0 17.5 18.0 18.5 19.0 19.5)
