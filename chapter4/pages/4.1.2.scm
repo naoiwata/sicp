@@ -111,8 +111,6 @@
 
 (define (cond-clauses exp) (cdr exp))
 
-(define (cond-clauses exp) (cdr exp))
-
 (define (cond-if-clause? clause)
   (eq? (cond-predicate clause) 'else))
 
@@ -123,7 +121,7 @@
 (define (cond->if exp)
   (expand-clauses (cond-clauses exp)))
 
-(define (cond-clauses clauses)
+(define (expand-clauses clauses)
   (if (null? clauses)
       #f
       (let ((first (car clauses))
