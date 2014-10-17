@@ -6,7 +6,7 @@
 
 (define (eval exp env)
   (cond
-    ((self-evalutating? exp) exp)
+    ((self-evaluating? exp) exp)
     ((variable? exp) (lookup-variable-value exp env))
     ((quoted? exp) (text-of-quotation exp))
     ((assignment? exp) (eval-assignment exp env))
