@@ -23,9 +23,8 @@
 (define (eval exp env)
   (cond
     ((self-evaluating? exp) exp)
-    ((variable? exp) (lookup-variable-value exp env))
-    ((get (car exp))
-     ((get (car exp)) exp env))
+    ((get eval-table (car exp))
+     ((get eval-table (car exp)) exp env))
     ((application? exp)
      (apply (eval (operator exp) env)
             (list-of-values (operands exp) env)))
@@ -43,9 +42,19 @@
        (eval-assignment exp env)))
 
 (put eval-table
-     'define eval-definition)
+     'define
+     (lambda (exp env)
+       (if (symbol? (cadr exp))
+           (caadr exp)
+           (make-lambda (cdadr exp)
+                        (cddr exp)))))
 
-(put eval-table 'if eval-if)
+(put eval-table
+     'if
+     (lambda (exp env)
+       (if (true? (eval (if-predicate exp) env))
+           (eval (if-consequent exp) env)
+           (eval (if-alternative exp) env))))
 
 (put eval-table
      'lambda 
@@ -63,3 +72,17 @@
      'cond
      (lambda (exp env)
         (eval (cond->if exp) env)))
+
+; ------------------------------------------------------------------------
+; test
+; ------------------------------------------------------------------------
+
+(print (eval 123 '())) ;; => 123
+
+(print (eval "hoge" '())) ;; => hoge
+
+(print (eval '(quote 10) '())) ;; => 10
+
+(print (eval '(set! a 10) '()))
+
+(print (eval '(define b 10) '()))
