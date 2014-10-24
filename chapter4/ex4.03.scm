@@ -83,6 +83,6 @@
 
 (print (eval '(quote 10) '())) ;; => 10
 
-(print (eval '(set! a 10) '()))
+(print (eval '(set! a 10) '())) ;; => gosh: "error": pair required, but got a
 
-(print (eval '(define b 10) '()))
+(print (eval '(define b 10) '())) ;; => gosh: "error": pair required, but got b
