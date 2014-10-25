@@ -43,11 +43,7 @@
 
 (put eval-table
      'define
-     (lambda (exp env)
-       (if (symbol? (cadr exp))
-           (caadr exp)
-           (make-lambda (cdadr exp)
-                        (cddr exp)))))
+     eval-definition)
 
 (put eval-table
      'if
@@ -83,6 +79,6 @@
 
 (print (eval '(quote 10) '())) ;; => 10
 
-(print (eval '(set! a 10) '())) ;; => gosh: "error": pair required, but got a
+(print (eval '(quote hoge) '())) ;; => hoge
 
 (print (eval '(define b 10) '())) ;; => gosh: "error": pair required, but got b
