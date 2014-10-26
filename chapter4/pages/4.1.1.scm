@@ -64,7 +64,22 @@
   'ok)
 
 (define (eval-definition exp env)
-  (define-value! (definition-variable exp)
-                       (eval (definition-variable exp) env)
-                       env)
+  (define-variable! (definition-variable exp)
+                    (eval (definition-variable exp) env)
+                    env)
   'ok)
+
+(define (define-variable! var val env)
+  (let ((frame (first-frame env)))
+    (define (scan vars vals)
+      (cond ((null? vars)
+             (add-binding-to-frame! var val frame))
+            ((eq? var (car vars))
+             (set-car! vals val))
+            (else (scan (cdr vars) (cdr vals)))))
+    (scan (frame-variables frame)
+          (frame-values frame))))
+
+(define (frame-variables frame) (car frame))
+
+(define (frame-values frame) (cdr frame))

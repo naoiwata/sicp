@@ -81,4 +81,13 @@
 
 (print (eval '(quote hoge) '())) ;; => hoge
 
-(print (eval '(define b 10) '())) ;; => gosh: "error": pair required, but got b
+(print (eval '(define a 10) '()))
+; (eval-definition '(define a 10) '())
+
+; (define-variable! (definition-variable '(define a 10))
+                    ; (eval (definition-variable '(define a 10)) '())
+                    ; '())
+                    
+; (define-variable! 'a
+                    ; (eval (definition-variable '(define a 10)) '())
+                    ; '())
