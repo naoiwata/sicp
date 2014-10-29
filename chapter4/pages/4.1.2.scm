@@ -111,7 +111,7 @@
 
 (define (cond-clauses exp) (cdr exp))
 
-(define (cond-if-clause? clause)
+(define (cond-else-clause? clause)
   (eq? (cond-predicate clause) 'else))
 
 (define (cond-predicate clause) (car clause))
