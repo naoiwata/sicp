@@ -68,26 +68,3 @@
      'cond
      (lambda (exp env)
         (eval (cond->if exp) env)))
-
-; ------------------------------------------------------------------------
-; test
-; ------------------------------------------------------------------------
-
-(print (eval 123 '())) ;; => 123
-
-(print (eval "hoge" '())) ;; => hoge
-
-(print (eval '(quote 10) '())) ;; => 10
-
-(print (eval '(quote hoge) '())) ;; => hoge
-
-(print (eval '(define a 10) '()))
-; (eval-definition '(define a 10) '())
-
-; (define-variable! (definition-variable '(define a 10))
-                    ; (eval (definition-variable '(define a 10)) '())
-                    ; '())
-                    
-; (define-variable! 'a
-                    ; (eval (definition-variable '(define a 10)) '())
-                    ; '())
