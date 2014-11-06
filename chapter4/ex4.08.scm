@@ -57,7 +57,7 @@
       (sequence->exp
        (lit (cons 'define (cons (cons (named-let-name exp) (named-let-variables exp))))
             (list (named-let-body exp)
-                  ;;tTODO
+                  ;;TODO
                   )))
       (if (let-variables exp)
           '()
