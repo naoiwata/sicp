@@ -16,3 +16,18 @@
 
 (define (frame-values frame)
   (map cdr frame))
+
+(define (lookup-variable-value var env)
+  (define (env-loop env)
+    (define (scan frame)
+      (cond ((null? frame)
+             (env-loop (enclosing-environment env)))
+            ((eq? var (caar frame))
+             (cdar frame))
+            (else
+             (scan (cdr frame)))))
+    (if (eq? env the-empty-environment)
+        (error "Unbound variable" var)
+        (let ((frame (first-frame env)))
+          (scan frame))))
+  (env-loop env))
