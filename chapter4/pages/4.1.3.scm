@@ -33,8 +33,8 @@
 
 (define the-empty-envionment '())
 
-(define (make-frame variable values)
-  (cons variable values))
+(define (make-frame variables values)
+  (cons variables values))
 
 (define (frame-variables frame)
   (car frame))
