@@ -85,7 +85,7 @@
 (define (rest-exps seq) (cdr seq))
 
 (define (sequence->exp seq)
-  (cond 
+  (cond
     ((null? seq) seq)
     ((last-exp? seq) (first-exp seq))
     (else

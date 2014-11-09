@@ -26,7 +26,7 @@
       (error "Unknown expression type -- EVAL" exp))))
 
 (define (apply procedure arguments)
-  (cond 
+  (cond
     ((primitive-procedure? procedure)
      (apply-primitive-procedure procedure arguments))
     ((compound-procedure? procedure)
