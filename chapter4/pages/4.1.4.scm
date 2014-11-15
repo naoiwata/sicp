@@ -36,3 +36,8 @@
 (define (primitive-procedure-objects)
   (map (lambda (proc) (list 'primitive (cadr proc)))
        primitive-procedures))
+
+(define (apply-primitive-procedure proc args)
+  (apply-inunderlying-scheme
+   (primitive-implementation proc) args))
+
