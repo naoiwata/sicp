@@ -41,3 +41,5 @@
   (apply-inunderlying-scheme
    (primitive-implementation proc) args))
 
+(define input-prompt ";;; M-Eval input:")
+(define output-prompt ";;; M-Eval output:")
